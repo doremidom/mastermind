@@ -1,0 +1,35 @@
+<html>
+  <head>
+  <link href="https://fonts.googleapis.com/css?family=Baloo+Tamma" rel="stylesheet">
+  	<style>
+    body {
+      background-color: lavender;
+      font-size: 24px;
+      font-family: Baloo Tamma;
+      text-align: center;
+    }
+  	</style>
+
+
+  </head>
+  <body>
+ 
+
+  <div style="position:relative; top:200px;">
+   <form>
+   <h1> THE GREAT CAESAR CIPHER </h1><br><br>
+  	<input type="text" placeholder ="enter a string to encode" name="string" required/>
+    <input type="text" placeholder ="enter the shift number" name="shift" required />
+  	<input type ="submit" value ="Send" />
+  </form>
+  
+    <p>
+    <% if result.length > 1 %>
+    <a style ="color:red"><%= string %> </a> has become: <br><br>
+      <%= result %>!!!
+    <%end%>
+
+    </p>
+    </div>
+  </body>
+</html>
