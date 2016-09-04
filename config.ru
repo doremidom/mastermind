@@ -1,2 +1,2 @@
-require cipher.rb 
+require 'cipher.rb' 
 run Sinatra::Application
