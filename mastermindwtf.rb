@@ -7,7 +7,6 @@ class Mastermind
 	def initialize(gametype, code)
 		@colors = ['r','g','y','b','o','v'] 	
 		@game_over = false
-		@tried_codes = []
 		if gametype == 1
 			@code = code.split('')
 			@computer_output =[]
@@ -23,7 +22,7 @@ class Mastermind
 	def code_generator(colors=@colors)		
 		code = []
 		4.times do |x|
-			random = rand((colors.length))
+			random = rand((colors.length-1))
 			code.push(colors[random])
 		end
 		code
@@ -48,7 +47,6 @@ class Mastermind
 			@game_over = true
 			@computer_output.push("Computer won!")
 		else
-			@tried_codes.push(guess_code)
 			guess_code.each_with_index do |color, index|
 				diagnosis = feedback(color,index)
 				if diagnosis == "match"
@@ -85,40 +83,36 @@ class Mastermind
 
 		if !close.empty?
 			@computer_output.push("making a new code that includes #{close}")
-			until close.all? { |e| new_guess.include?(e) } && !@tried_codes.include?(new_guess)
+			until close.all? { |e| new_guess.include?(e) }
 				#@computer_output.push("close is #{close[0]}")
 				new_guess = code_generator(new_colors)
 
-				unless known.empty?
-					known.each_pair do |color, pos| 
-						pos.each do |ind|
-							new_guess[ind] = color
-						end
-					end
-				end
+				# unless known.empty?
+				# 	known.each_pair do |color, pos| 
+				# 		pos.each do |ind|
+				# 			new_guess[ind] = color
+				# 		end
+				# 	end
+				# end
 			end
 			#close = [] 
 		else
 			@computer_output.push("making a new code")
-			
+			new_guess = code_generator(new_colors)
 
-			new_guess = code_generator(new_colors)	
 			
-			unless known.empty?
+		
+		end
+
+		unless known.empty?
 			known.each_pair do |color, pos| 
 				pos.each do |ind|
 					new_guess[ind] = color
 				end
 			end
-
-
-		end	
-		
 		end
 
-
-
-		#@computer_output.push("new guess is #{new_guess}")
+		@computer_output.push("new guess is #{new_guess}")
 		computer_guess(new_guess, known, close, wrong)
 	end
 
