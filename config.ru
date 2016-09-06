@@ -1,2 +1,2 @@
-require './cipher' 
+require './mastermind' 
 run Sinatra::Application
