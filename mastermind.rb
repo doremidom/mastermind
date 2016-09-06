@@ -1,5 +1,5 @@
 require 'sinatra'
-#require 'sinatra/reloader'
+require 'sinatra/reloader' if development?
 
 class Mastermind
 	attr_accessor :computer_output
@@ -22,7 +22,7 @@ class Mastermind
 	def code_generator(colors=@colors)		
 		code = []
 		4.times do |x|
-			random = rand(5)
+			random = rand((colors.length-1))
 			code.push(colors[random])
 		end
 		code
@@ -76,7 +76,7 @@ class Mastermind
 		wrong.each do |color|
 			if new_colors.include?(color)
 				new_colors.delete(color)
-				@computer_output.push("deleted #{color}")
+				#@computer_output.push("deleted #{color}")
 			end
 		end 
 
@@ -84,15 +84,13 @@ class Mastermind
 
 		if !close.empty?
 			until new_guess.include?(close[0])
+				#@computer_output.push("close is #{close[0]}")
 				new_guess = code_generator(new_colors)
 			end
 			close.shift
 		else
 			@computer_output.push("making a new code")
-			4.times do |y|
-				random = rand(0..(new_colors.length-1))
-				new_guess.push(new_colors[random])
-			end
+			new_guess = code_generator(new_colors)
 		end
 
 		unless known.empty?
