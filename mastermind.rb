@@ -2,9 +2,9 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 
 class Mastermind
-	attr_accessor :computer_output
+	attr_accessor :computer_output, :guess_feedback, :code, :game_over
 
-	def initialize(gametype, code)
+	def initialize(gametype, code, saved_code=nil)
 		@colors = ['r','g','y','b','o','v'] 	
 		@game_over = false
 		@tried_codes = []
@@ -13,9 +13,14 @@ class Mastermind
 			@computer_output =[]
 			computer_guess
 		elsif gametype == 2
-			@code = code_generator
-			@guess = code 
-			play
+			if saved_code
+				@code = saved_code
+			else
+				@code = code_generator
+			end
+			@guess = code.split('')
+			@guess_feedback = []
+			check_guess(@guess)
 		end
 	end
 
@@ -125,7 +130,7 @@ class Mastermind
 	def check_guess(guess)
 		if guess == @code
 			@game_over = true
-			puts "You won!"
+			@guess_feedback.push("You won!")
 		else 
 			guess.each_with_index do |color, index|
 				response = feedback(color,index)
@@ -148,23 +153,39 @@ class Mastermind
 
 	def hint(guess_response)
 		if guess_response == "match"
-			puts "This color is in the right position."
+			@guess_feedback.push("This color is in the right position.")
 		elsif guess_response == "partial match"
-			puts "This color is in the wrong position."
+			@guess_feedback.push("This color is in the wrong position.")
 		else
-			puts "This color was not found in the code."
+			@guess_feedback.push("This color was not found in the code.")
 		end
 	end
 end
 
-
+enable :sessions
 
 get '/' do
 	#checking for the presence of either type of game parameter
 	if !params['code-guess'].nil? || !params['user-code'].nil?
 		game_started = true
 		if !params['code-guess'].nil?
-			game_type = "user"
+				code_guess = params['code-guess']
+				game_type = "user"			
+			
+				if !session[:game_code].nil?
+					@saved_code = session[:game_code]
+					game = Mastermind.new(2, code_guess, @saved_code)
+					if game.game_over
+						session[:game_code] = nil
+						game_over = true
+					end					
+				else
+					game = Mastermind.new(2, code_guess)
+					session[:game_code] = game.code
+					session[:game] = game
+				end
+
+				guess_feedback = game.guess_feedback
 		else
 			game_type = "computer"
 			user_code = params['user-code']
@@ -175,12 +196,11 @@ get '/' do
 		game_started = false
 		game_type = nil
 		computer_output = nil
+		guess_feedback = nil
+		code_guess = nil
+		code = nil
+		game_over = false
 	end
 
-	erb :index , :locals => {:game_started => game_started, :game_type => game_type, :computer_output => computer_output}
+	erb :index , :locals => {:game_started => game_started, :game_type => game_type, :computer_output => computer_output, :guess_feedback => guess_feedback, :code_guess => code_guess, :saved_code => @saved_code, :game_over => game_over}
 end
-
-post '/' do
-	erb :game #, :locals
-end
-

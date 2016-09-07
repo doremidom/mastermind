@@ -153,9 +153,61 @@
 
   <% if game_type == "user" %>
   <div id="user_guess_game" style="">
-  Here's the feedback on your guess:<br><br>
+  Here's the feedback on your guess:<br>
+
+  <% code_guess.each_char do |letter| %>
+
+    <% if letter.include?('r') %>
+      <i class="fa fa-circle red" id="r" aria-hidden="true"></i>
+    <%elsif letter.include?('o') %>
+      <i class="fa fa-circle orange" aria-hidden="true"></i>
+      <%elsif letter.include?('y') %>
+      <i class="fa fa-circle yellow" aria-hidden="true"></i>
+      <%elsif letter.include?('g') %>
+      <i class="fa fa-circle green" aria-hidden="true"></i>
+      <%elsif letter.include?('b') %>
+      <i class="fa fa-circle blue" aria-hidden="true"></i>
+      <%elsif letter.include?('v') %>
+      <i class="fa fa-circle violet" aria-hidden="true"></i>
+    <%end%>
+  <%end%>
+
+  <%#= @saved_code %>
+
+
+
   <div id="feedback_box">
-  hi
+  <% guess_feedback.each do |line| %>
+  <%= line %>
+  <br>
+  <%end%><br>
+  
+<% if game_over %>
+      <form>
+      <button type="submit" class="btn btn-primary" id="new_game_submit">
+      Play Again!
+      </button>
+      </form>
+  <%else%>
+
+  <form>
+
+    click the colors to enter a guess: <br>
+    <i class="fa fa-circle red fa-2x" id="r" aria-hidden="true"></i>
+<i class="fa fa-circle orange fa-2x" id="o" aria-hidden="true"></i>
+<i class="fa fa-circle yellow fa-2x" id="y" aria-hidden="true"></i>
+<i class="fa fa-circle green fa-2x" id="g" aria-hidden="true"></i>
+<i class="fa fa-circle blue fa-2x"  id="b" aria-hidden="true"></i>
+<i class="fa fa-circle violet fa-2x" id="v" aria-hidden="true"></i>
+<br>
+
+<input type="text" name="code-guess" id="guess_code_again" maxlength="4"> 
+    <button type="submit" class="btn btn-primary" id="new_guess_submit">
+      submit
+    </button><br>
+    <h5>(the code is 4 colors, there can be duplicates)</h5>
+</form>
+<%end%>
   </div>
   <br><br>
 
@@ -206,8 +258,14 @@
             return false;}
         });
 
-
-
+        $('#feedback_box i').click(function() {
+            var value = $(this).attr('id');
+            var input = $('#guess_code_again');
+            if (input.val().length < 4) {
+              input.val(input.val() + value);}
+            else {
+            return false;}
+        });
     });
 
     </script>
