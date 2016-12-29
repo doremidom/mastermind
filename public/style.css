@@ -1,0 +1,40 @@
+body {
+      background-color: lavender;
+      font-size: 24px;
+      font-family: Baloo Tamma;
+      text-align: center;
+    }
+h1 {
+  font-size: 65px;
+}
+h5 {
+  font-size: 17px;
+  margin-top: 0px;
+}
+.red {color:red;}
+.orange {color:orange;}
+.yellow {color:yellow;}
+.green {color:green;}
+.blue {color:blue;}
+.violet {color:violet;}
+i:hover {
+  color: white;
+}
+#computer_screen{
+  top: 100px;
+  background-color: black;
+  color: limegreen;
+  font-family: Courier;
+  font-size: 18px;
+  width: 350px;
+  height: 200px;
+  margin: 0 auto;
+  position: relative;
+  overflow: auto;
+}
+#computer{
+  background-image: url("/lappy.jpg");
+  width:700px;
+  height:450px;
+  margin: auto;
+}
